@@ -101,6 +101,8 @@ def weighted_mean(items):
 def weighted_perplexity(items):
     return math.exp(-weighted_mean(items))
 
+def token_count(items):
+    return sum(items)
 
 def bleu(items):
     """The Bilingual Evaluation Understudy Score, or BLEU for short, is a metric

@@ -43,6 +43,8 @@ from . import pile
 from . import wikitext
 from . import lambada_multilingual
 from . import mutual
+from . import code
+
 
 ########################################
 # Translation tasks
@@ -105,6 +107,20 @@ TASK_REGISTRY = {
     **lambada_multilingual.construct_tasks(),
 
     "wikitext": wikitext.WikiText,
+
+    'code_python': code.CodePython,
+    'code_c++': code.CodeCpp,
+    'code_c': code.CodeC,
+    'code_c#': code.CodeCS,
+    'code_php': code.CodePHP,
+    'code_go': code.CodeGo,
+    'code_scala': code.CodeScala,
+    'code_java': code.CodeJava,
+    'code_javascript': code.CodeJavaScript,
+    'code_typescript': code.CodeTypeScript,
+    'code_ruby': code.CodeRuby,
+    'code_rust': code.CodeRust,
+
     # "cbt-cn": cbt.CBTCN, # disabled pending context length fix
     # "cbt-ne": cbt.CBTNE, # disabled pending context length fix
 

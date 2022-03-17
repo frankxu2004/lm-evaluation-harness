@@ -3,7 +3,7 @@ import random
 import numpy as np
 import re
 
-from lm_eval.metrics import mean, perplexity, weighted_perplexity, weighted_mean
+from lm_eval.metrics import mean, perplexity, weighted_perplexity, weighted_mean, token_count
 
 
 class LM(abc.ABC):
@@ -312,6 +312,7 @@ class PerplexityTask(Task, abc.ABC):
             "word_perplexity": False,
             "byte_perplexity": False,
             "bits_per_byte": False,
+            "num_tokens": False,
         }
 
     def doc_to_text(self, doc):
@@ -332,14 +333,16 @@ class PerplexityTask(Task, abc.ABC):
         return {
             "word_perplexity": (loglikelihood, words),
             "byte_perplexity": (loglikelihood, bytes),
-            "bits_per_byte": (-loglikelihood, self.count_bytes(doc))
+            "bits_per_byte": (-loglikelihood, self.count_bytes(doc)),
+            "num_tokens": words
         }
 
     def aggregation(self):
         return {
             "word_perplexity": weighted_perplexity,
             "byte_perplexity": weighted_perplexity,
-            "bits_per_byte": weighted_mean
+            "bits_per_byte": weighted_mean,
+            "num_tokens": token_count, 
         }
 
     def count_bytes(self, doc):

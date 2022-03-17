@@ -10,8 +10,6 @@ import numpy as np
 
 class GPT2LM(LM):
     MAX_GEN_TOKS = 256
-    VOCAB_SIZE = 50257
-    EOT_TOKEN_ID = 50256
 
     def __init__(self, device='cuda', pretrained='gpt2', batch_size=1):
         super().__init__()
@@ -23,15 +21,18 @@ class GPT2LM(LM):
         self.gpt2.eval()
 
         # pretrained tokenizer for neo is broken for now so just hardcoding this to gpt2
-        self.tokenizer = transformers.GPT2TokenizerFast.from_pretrained('gpt2')
-        self.tokenizer.pad_token = "<|endoftext|>"
+        self.tokenizer = transformers.GPT2TokenizerFast.from_pretrained(pretrained)
+        print(self.tokenizer)
+        self.EOT_TOKEN_ID = self.tokenizer.eos_token_id
+
+        # self.tokenizer.pad_token = "<|endoftext|>"
         try:
             self.max_length = self.gpt2.config.n_ctx
         except AttributeError:
             # gptneoconfig doesn't have n_ctx apparantly
             self.max_length = self.gpt2.config.max_position_embeddings
 
-        assert self.tokenizer.encode('hello\n\nhello') == [31373, 198, 198, 31373]
+        # assert self.tokenizer.encode('hello\n\nhello') == [31373, 198, 198, 31373]
 
         # multithreading and batching
         gpus = torch.cuda.device_count()
@@ -79,6 +80,14 @@ class GPT2LM(LM):
                 )))
 
                 rolling_token_windows = [(None,) + x for x in rolling_token_windows]
+
+                new_r_w = []
+                for x in rolling_token_windows:
+                    if len(x[1]) > 0:
+                        new_r_w.append(x)
+                
+                rolling_token_windows = new_r_w
+
 
                 # TODO: extract out this call so it only gets called once and also somehow figure out partial caching for that
                 string_nll = self._loglikelihood_tokens(rolling_token_windows, disable_tqdm=True)
