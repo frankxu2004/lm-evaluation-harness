@@ -1,2 +1,2 @@
-pygments=2.11.2
+pygments==2.11.2
 -e .
