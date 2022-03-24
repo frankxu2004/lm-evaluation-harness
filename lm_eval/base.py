@@ -312,7 +312,6 @@ class PerplexityTask(Task, abc.ABC):
             "word_perplexity": False,
             "byte_perplexity": False,
             "bits_per_byte": False,
-            "num_tokens": False,
         }
 
     def doc_to_text(self, doc):
@@ -327,14 +326,15 @@ class PerplexityTask(Task, abc.ABC):
         return req
 
     def process_results(self, doc, results):
-        loglikelihood, = results
+        (loglikelihood, num_model_tokens), = results
         words = self.count_words(doc)
         bytes = self.count_bytes(doc)
         return {
             "word_perplexity": (loglikelihood, words),
             "byte_perplexity": (loglikelihood, bytes),
             "bits_per_byte": (-loglikelihood, self.count_bytes(doc)),
-            "num_tokens": words
+            "num_pygments_tokens": words,
+            "num_model_tokens": num_model_tokens,
         }
 
     def aggregation(self):
@@ -342,7 +342,8 @@ class PerplexityTask(Task, abc.ABC):
             "word_perplexity": weighted_perplexity,
             "byte_perplexity": weighted_perplexity,
             "bits_per_byte": weighted_mean,
-            "num_tokens": token_count, 
+            "num_pygments_tokens": token_count, 
+            "num_model_tokens": token_count, 
         }
 
     def count_bytes(self, doc):

@@ -20,7 +20,6 @@ class GPT2LM(LM):
         self.gpt2 = transformers.AutoModelForCausalLM.from_pretrained(pretrained).to(self.device)
         self.gpt2.eval()
 
-        # pretrained tokenizer for neo is broken for now so just hardcoding this to gpt2
         self.tokenizer = transformers.GPT2TokenizerFast.from_pretrained(pretrained)
         print(self.tokenizer)
         self.EOT_TOKEN_ID = self.tokenizer.eos_token_id
@@ -72,8 +71,9 @@ class GPT2LM(LM):
         loglikelihoods = []
         with torch.no_grad():
             for string, in tqdm(requests):
+                tokens = self.tokenizer.encode(string)
                 rolling_token_windows = list(map(utils.make_disjoint_window, utils.get_rolling_token_windows(
-                    token_list=self.tokenizer.encode(string),
+                    token_list=tokens,
                     prefix_token=self.EOT_TOKEN_ID,
                     max_seq_len=self.max_length,
                     context_len=1,
@@ -96,8 +96,8 @@ class GPT2LM(LM):
                 string_nll = [x[0] for x in string_nll]
                 
                 string_nll = sum(string_nll)
-                loglikelihoods.append(string_nll)
-
+                loglikelihoods.append((string_nll, len(tokens)))
+        
         return loglikelihoods
 
     def _loglikelihood_tokens(self, requests, disable_tqdm=False):
