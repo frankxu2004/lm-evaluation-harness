@@ -96,6 +96,7 @@ class GPT2LM(LM):
                 string_nll = [x[0] for x in string_nll]
                 
                 string_nll = sum(string_nll)
+                print(len(tokens))
                 loglikelihoods.append((string_nll, len(tokens)))
         
         return loglikelihoods
