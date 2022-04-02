@@ -1,3 +1,19 @@
+# Evaluation for Code Language Models
+
+For perplexity evaluation on GPT-Neo or other models on Hugging Face on our test dataset, install this repository:
+
+```bash
+pip install -e .
+```
+
+
+To evaluate models on Hugging Face, including GPT-Neo, CodeParrot, specify `pretrained=`, and run the following:
+```
+python main.py --model gpt2 --model_args pretrained=EleutherAI/gpt-neo-2.7B \
+      --device cuda:0 --batch_size 1 \ 
+      --tasks code_python,code_c++,code_c#,code_c,code_php,code_go,code_scala,code_java,code_javascript,code_typescript,code_ruby,code_rust
+```
+
 # Language Model Evaluation Harness
 
 ![](https://github.com/EleutherAI/lm-evaluation-harness/workflows/Build/badge.svg)
