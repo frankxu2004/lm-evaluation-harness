@@ -44,6 +44,7 @@ from . import wikitext
 from . import lambada_multilingual
 from . import mutual
 from . import code
+from . import humaneval_ppl
 
 
 ########################################
@@ -120,6 +121,8 @@ TASK_REGISTRY = {
     'code_typescript': code.CodeTypeScript,
     'code_ruby': code.CodeRuby,
     'code_rust': code.CodeRust,
+    'humaneval_ppl': humaneval_ppl.HumanEvalPerplexity,
+
 
     # "cbt-cn": cbt.CBTCN, # disabled pending context length fix
     # "cbt-ne": cbt.CBTNE, # disabled pending context length fix
