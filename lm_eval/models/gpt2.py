@@ -20,7 +20,7 @@ class GPT2LM(LM):
         self.gpt2 = transformers.AutoModelForCausalLM.from_pretrained(pretrained).to(self.device)
         self.gpt2.eval()
 
-        self.tokenizer = transformers.GPT2TokenizerFast.from_pretrained(pretrained)
+        self.tokenizer = transformers.AutoTokenizer.from_pretrained(pretrained)
         print(self.tokenizer)
         self.EOT_TOKEN_ID = self.tokenizer.eos_token_id
 
