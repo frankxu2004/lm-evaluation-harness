@@ -23,6 +23,8 @@ class GPT2LM(LM):
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(pretrained)
         print(self.tokenizer)
         self.EOT_TOKEN_ID = self.tokenizer.eos_token_id
+        if not self.EOT_TOKEN_ID:
+            self.EOT_TOKEN_ID = self.tokenizer.bos_token_id
 
         # self.tokenizer.pad_token = "<|endoftext|>"
         try:
